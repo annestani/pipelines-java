@@ -3,9 +3,6 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
-trigger:
-- main
-
 parameters:
 - name: image
   displayName: Pool Image
@@ -16,8 +13,15 @@ parameters:
   - ubuntu-latest
   - macOS-latest 
 
-pool:
-  vmImage: ${{ parameters.image }}
+trigger: none
+
+jobs:
+- job: build
+  displayName: build
+  pool: 
+    vmImage: ${{ parameters.image }}
+  steps:
+
 
 steps:
 - task: Maven@3
@@ -30,3 +34,4 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+- script: echo building $(Build.BuildNumber) with ${{ parameters.image }}
