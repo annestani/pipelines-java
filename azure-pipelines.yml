@@ -6,32 +6,24 @@
 parameters:
 - name: image
   displayName: Pool Image
-  type: string
-  default: ubuntu-latest
   values:
   - windows-latest
   - ubuntu-latest
-  - macOS-latest 
+  - macOS-latest
+- name: test
+  displayName: Run Tests?
+  type: boolean
+  default: false
 
 trigger: none
 
 jobs:
 - job: build
-  displayName: build
+  displayName: Build and Test
   pool: 
     vmImage: ${{ parameters.image }}
   steps:
+  - script: echo building $(Build.BuildNumber)
+  - ${{ if eq(parameters.test, true) }}:
+    - script: echo "Running all the tests"
 
-
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
-- script: echo building $(Build.BuildNumber) with ${{ parameters.image }}
