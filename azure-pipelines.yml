@@ -17,7 +17,7 @@ parameters:
   - macOS-latest 
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: ${{ parameters.image }}
 
 steps:
 - task: Maven@3
